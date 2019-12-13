@@ -1,0 +1,15 @@
+{
+  "name": "al-code-upload",
+  "version": "1.0.0",
+  "description": "",
+  "main": "upload_files.js",
+  "scripts": {
+    "start": "node upload_files.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "node-fetch": "^2.6.0"
+  }
+}
