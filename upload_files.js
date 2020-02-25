@@ -31,10 +31,13 @@ async function upload_changed_files() {
         code_hashes = JSON.parse(fs.readFileSync(hash_file));
     }
 
+    let found_change = false;
+
     // Upload files that has changed
     for (const file_path in save_map) {
         const file_checksum = checksum(file_path);
         if (code_hashes[file_path] !== file_checksum) {
+            found_change = true;
             const slot = save_map[file_path].slot;
             const name = save_map[file_path].name;
 
@@ -58,6 +61,10 @@ async function upload_changed_files() {
                 console.log(`${json_data[0].message}`);
             }
         }
+    }
+
+    if (!found_change) {
+        console.log("No changes found in the specified files");
     }
 
     // Store new checksum hashes
