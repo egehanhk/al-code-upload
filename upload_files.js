@@ -39,16 +39,24 @@ async function upload_changed_files() {
             const name = save_map[file_path].name;
 
             console.log(`Checksum changed in file ${file_path}`);
+            let upload_result;
             try {
-                await upload(file_path, slot, name);
+                upload_result = await upload(file_path, slot, name);
             } catch(error) {
                 console.log(`Error uploading ${file_path} with reason: ${JSON.stringify(reason)}`);
                 continue;
             }
-            console.log(`Uploaded ${file_path} to save slot ${slot} with name ${name}`);
+            const json_data = await upload_result.json();
+            if (json_data[0].type === "message") {
+                console.log(`Uploaded ${file_path} to save slot ${slot} with name ${name}`);
+                console.log(`${json_data[0].message}`);
 
-            // Store the new checksum
-            code_hashes[file_path] = file_checksum;
+                // Store the new checksum
+                code_hashes[file_path] = file_checksum;
+            } else {
+                console.log(`Error during upload. Server gave responded with a ${json_data[0].type}`);
+                console.log(`${json_data[0].message}`);
+            }
         }
     }
 
