@@ -50,15 +50,17 @@ async function upload_changed_files() {
                 continue;
             }
             const json_data = await upload_result.json();
-            if (json_data[0].type === "message") {
+            const message_objects = json_data.filter(e=>e.type && e.type === "message"); // Hopefully there's only one with element type === "message"
+            if (message_objects[0]) {
                 console.log(`Uploaded ${file_path} to save slot ${slot} with name ${name}`);
-                console.log(`${json_data[0].message}`);
+                console.log(`${message_objects[0].message}`);
 
                 // Store the new checksum
                 code_hashes[file_path] = file_checksum;
             } else {
-                console.log(`Error during upload. Server gave responded with a ${json_data[0].type}`);
-                console.log(`${json_data[0].message}`);
+                console.log(`Error during upload. Server responded with ${json_data[0].type}`);
+                console.log("Full response:");
+                console.log(json_data);
             }
         }
     }
